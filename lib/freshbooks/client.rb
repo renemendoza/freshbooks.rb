@@ -8,7 +8,8 @@ module FreshBooks
       s.string :s_city, :s_state, :s_country, :s_code
       s.string :language, :currency_code
       s.float :credit, :read_only => true
-      s.object :credits, :read_only => true
+#     s.object :credits, :read_only => true
+      s.array :credits#, :read_only => true
       s.date_time :updated, :read_only => true
       s.fixnum :client_id
       s.object :links, :read_only => true

@@ -22,13 +22,18 @@ module FreshBooks
     def self.new_from_xml(xml_root)
       object = self.new()
       
-      self.schema_definition.members.each do |member_name, member_options|
-        node = xml_root.elements[member_name.dup]
-        next if node.nil?
-        next if XmlSerializer.deprecated? node
-        
-        value = FreshBooks::XmlSerializer.to_value(node, member_options[:type])
-        object.send("#{member_name}=", value)
+      if object.is_a? FreshBooks::Credit
+        object.send("currency=", xml_root.attribute('currency').value)
+        object.send("credit=", xml_root.text)
+      else
+        self.schema_definition.members.each do |member_name, member_options|
+          node = xml_root.elements[member_name.dup]
+          next if node.nil?
+          next if XmlSerializer.deprecated? node
+          
+          value = FreshBooks::XmlSerializer.to_value(node, member_options[:type])
+          object.send("#{member_name}=", value)
+        end
       end
       
       return object
